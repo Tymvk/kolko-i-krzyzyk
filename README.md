@@ -1,63 +1,47 @@
-#Kod
+# Kółko i Krzyżyk
 
-Plansza generowana dynamicznie w pętli (for), tworzonych jest 9 elementów div z klasą cell i atrybutem data-index (0-8).
+Implementacja gry w Kółko i Krzyżyk w HTML, CSS, JavaScript.
 
-Event listener click przypisany do każdej komórki wywołuje funkcję handleClick().
+---
 
-W handleClick():
+## Struktura plików
 
-Pobierany jest index klikniętej komórki z dataset.
 
-Jeśli gameActive jest false lub pole o danym indeksie nie jest null, funkcja kończy działanie (return).
+index.html Struktura DOM, kontener planszy, przycisk reset, komunikat  
+script.js  Logika gry: obsługa zdarzeń, zarządzanie stanem, sprawdzanie zwycięstwa 
 
-W przeciwnym wypadku:
 
-Wpisuje symbol (X lub O) do tablicy cells i ustawia textContent klikniętego pola.
+## Działanie kodu
 
-Wywoływana jest funkcja checkWin().
+### Plansza
+- Dynamicznie tworzona w JS (`for`, 9 komórek `.cell` z `data-index` 0–8).
+- Każda komórka: `click` → `handleClick(e)`.
 
-checkWin():
+### `handleClick(e)`
+- Pobiera `index` klikniętego pola.
+- Ignoruje klik, jeśli gra zakończona lub pole zajęte.
+- Aktualizuje `cells[index]`, ustawia `textContent`.
+- Sprawdza:
+  - `checkWin()`: wygrana → komunikat + `showWinLine()`.
+  - pełna plansza → remis.
+  - zmiana `currentPlayer`.
 
-Sprawdza tablicę cells pod kątem występowania jednej z predefiniowanych kombinacji zwycięskich (winPatterns).
+### `checkWin()`
+- Sprawdza `cells` względem `winPatterns`.
+- Znalezienie zwycięskiej kombinacji → zapis do `winLine`, zwrot `true`.
+- Brak zwycięzcy → zwrot `false`.
 
-Jeśli wystąpi zwycięstwo:
+### `showWinLine(pattern)`
+- Pobiera środek pól `a` i `c`.
+- Oblicza długość i kąt (`Math.sqrt`, `Math.atan2`).
+- Tworzy `div.line`, ustawia `width`, `left`, `top`, `transform`.
+- Dodaje linię do `board`.
 
-Przypisywana jest zwycięska sekwencja do winLine.
+### `resetGame()`
+- Reset tablicy `cells`.
+- `currentPlayer = X`.
+- `gameActive = true`.
+- Czyści planszę, usuwa istniejącą linię.
 
-Zwraca true.
+Resetuje winLine do null.
 
-Jeśli nie:
-
-Zwraca false.
-
-Po wygranej:
-
-gameActive ustawiane jest na false.
-
-Aktualizowana jest zawartość message.
-
-Wywoływana funkcja showWinLine(), która:
-
-Oblicza środek dwóch skrajnych komórek zwycięskiego układu (getBoundingClientRect()).
-
-Tworzy element div z klasą line.
-
-Ustawia width, top, left i transform (obliczenie kąta atan2 i długości sqrt).
-
-Dodaje linię do board.
-
-W przypadku remisu:
-
-Gdy wszystkie elementy cells są niepuste i brak zwycięzcy, ustawiany jest komunikat o remisie.
-
-Po kliknięciu resetBtn wywoływana jest resetGame():
-
-Zeruje tablicę cells (wszystkie wartości null).
-
-Ustawia currentPlayer na "X", gameActive na true.
-
-Czyści wszystkie komórki na planszy (textContent).
-
-Usuwa istniejącą linię zwycięstwa (jeśli istnieje).
-
-Resetuje komunikat message.
